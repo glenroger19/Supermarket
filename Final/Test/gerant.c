@@ -3,13 +3,19 @@
 #include<string.h>
 #include<stdlib.h>
 
-typedef struct tm date;
-
 typedef struct{
     char nom[64];
     double prix_unit;
     int stocks;
 }produit;
+
+int taille_fich(char* nomfichier){
+    FILE* fich = fopen(nomfichier,"rb");
+    fseek(fich,0,SEEK_END);
+    int file_size  = ftell(fich);
+    int n = file_size/sizeof(produit);
+    return n;
+}
 
 int ordrealpha(const char* s1,const char* s2){
     int n = strlen(s2);
@@ -55,38 +61,9 @@ void charge(int n, char* nomfichier){
     fclose(fich);
 }
 
-/*void remove_stock(char* nomfichier_in, char* nomfichier_out){
-    int n = taille_fich("stock");
-    FILE* fich = fopen(nomfichier_in,"rb");
-    FILE* f_out = fopen(nomfichier_out,"rb");
-    produit* copietab = malloc(n*sizeof(produit));
-    fread(copietab,sizeof(produit),n,fich);
-    produit rm;
-    printf("Quel produit voulez-vous effacer ?\n");
-    scanf("%s",rm.nom);
-    char line[512];
-    int stop = 0;
-    int i = 0;
-    while(fgets(line,512,fich)!=NULL && ordrealpha(copietab[i].nom,rm.nom)){
-        fputs(line,f_out);
-    }
-    fclose(f_out);
-    produit* copietab1 = malloc(n*sizeof(produit));
-    fread(copietab1,sizeof(produit),n,fich);
-}*/
-
-int taille_fich(char* nomfichier){
-    FILE* fich = fopen(nomfichier,"rb");
-    fseek(fich,0,SEEK_END);
-    int file_size  = ftell(fich);
-    int n = file_size/sizeof(produit);
-    return n;
-}
-
 int main(){
     //stock();
-    //add();
-    //remove_stock();
+    add();
     int n = taille_fich("stock");
     charge(n,"stock");
 }

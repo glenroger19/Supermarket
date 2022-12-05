@@ -3,6 +3,8 @@
 #include<string.h>
 #include<stdlib.h>
 
+typedef struct tm date;
+
 typedef struct item_panier{
     int idProd;
     double quantite;
