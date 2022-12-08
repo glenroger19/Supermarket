@@ -2,7 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 
+
 typedef struct{
+    int id;
     char nom[64];
     double prix_unit;
     int stocks;
@@ -29,6 +31,18 @@ int taille(char* nomfichier){
     return n;
 }
 
+void sauvegarde_add(produit* tab, int n, char* nomfichier){
+    FILE* f = fopen(nomfichier,"ab");
+    fwrite(tab,sizeof(produit),n,f);
+    fclose(f);
+}
+
+void sauvegarde(produit* tab, int n, char* nomfichier){
+    FILE* f = fopen(nomfichier,"w");
+    fwrite(tab,sizeof(produit),n,f);
+    fclose(f);
+}
+
 void charge(produit* tab,int n, char* nomfichier){
     FILE* fich = fopen(nomfichier,"rb");
     fread(tab,sizeof(produit),n,fich);
@@ -36,13 +50,16 @@ void charge(produit* tab,int n, char* nomfichier){
 }
 
 void print_tab(produit* tab,int n){
+    printf("                ID                  Nom du produit                  Prix unitaire                    Quantité\n");
     for(int i=0; i<n; i++){
-        printf("%s %.2f %d\n",tab[i].nom,tab[i].prix_unit,tab[i].stocks);
+        printf("                %i                       %s                           %.2f                            %d\n",tab[i].id,tab[i].nom,tab[i].prix_unit,tab[i].stocks);
     }
 }
 
 void add(produit* new){
-    printf("Quels est le produit à ajouter ?\n");
+    printf("Quel est l'id du produit à ajouter ?\n");
+    scanf("%i",&new->id);
+    printf("Quel est le produit à ajouter ?\n");
     scanf("%s",new->nom);
     printf("Quel est le prix du produit ?\n");
     scanf("%lf",&new->prix_unit);
@@ -50,62 +67,27 @@ void add(produit* new){
     scanf("%i",&new->stocks);
 }
 
-/*int add_bin(char* nomfichier){
-    FILE* stock = fopen("stock","ab");
-    produit* new = malloc(sizeof(produit));
-    add(new);
-    fwrite(new,sizeof(produit),1,stock);
-    fclose(stock);
-    free(new);
-    char rep;
-    printf("Voulez vous ajouter d'autres produits ?\n");
-    printf("Choisir (O)ui ou (N)on\n");
-    scanf("%s",&rep);
-    if(rep=='N'){
-        return 0;
-    }
-}*/
-
-void enleve(produit* new, int n){
-    char sup;
-    printf("Quel produit voulez-vous enlever ?\n");
-    scanf("%s",&sup);
+void enleve(produit* new, produit* new_copy, int n){
+    int sup;
+    printf("Quel est l'id du produit voulez-vous enlever ?\n");
+    scanf("%i",&sup);
     int indice=0;
-    while(ordrealpha(new[indice].nom,&sup)!=0 && indice<n){
+    while(new[indice].id != sup && indice<n){
         indice++;
     }
     printf("%i\n",indice);
-    /*for(int i=0;i<n-1;i++){
+    for(int i=0;i<n-1;i++){
         if(i<indice){
-            for(int j=0;j<strlen(new[i].nom);j++){
-                new[i].nom[j] = new[i].nom[j];
-            }
-            new[i].prix_unit = new[i].prix_unit;
-            new[i].stocks = new[i].stocks;
+            new_copy[i].id = new[i].id;
+            strcpy(new_copy[i].nom,new[i].nom);
+            new_copy[i].prix_unit = new[i].prix_unit;
+            new_copy[i].stocks = new[i].stocks;
         }
         else{
-            for(int j=0;j<strlen(new[i].nom);j++){
-                new[i].nom[j] = new[i+1].nom[j];
-            }
-            new[i].prix_unit = new[i+1].prix_unit;
-            new[i].stocks = new[i+1].stocks;
+            new_copy[i].id = new[i].id;
+            strcpy(new_copy[i].nom,new[i+1].nom);
+            new_copy[i].prix_unit = new[i+1].prix_unit;
+            new_copy[i].stocks = new[i+1].stocks;
         }
-    }*/
-}
-
-int main(){
-    FILE* stock = fopen("stock","ab");
-    produit* new = malloc(sizeof(produit));
-    add(new);
-    fwrite(new,sizeof(produit),1,stock);
-    fclose(stock);
-    free(new);
-    int n = taille("stock");
-    //add_bin("stock");
-    produit* tab = malloc(n*sizeof(produit));
-    charge(tab,n,"stock");
-    print_tab(tab,n);
-    enleve(tab,n);
-    print_tab(tab,n-1);
-    free(tab);
+    }
 }
