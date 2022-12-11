@@ -47,39 +47,16 @@ void remet_stock(item_panier* ip){
     free(tab);
 }
 
-int loc_prod(panier *p, int rem){
-    item_panier* ip = p->first;
-    int loc = 0;
-    while(ip!=NULL && ip->idProd!=rem){
-        loc++;
-        ip = ip->suivant;
+double prix(item_panier* ip){
+    int identifiant=0;
+    int n = taille("stock");
+    produit* tab = malloc(n*sizeof(produit));
+    charge(tab,n,"stock");
+    while(ip->idProd!=tab[identifiant].id){
+        identifiant++;
     }
-    return loc;
-}
-
-void pop_front(panier* p){
-    item_panier* ip = p->first;
-    p->first = p->first->suivant;
-    free(ip);
-}
-
-void pop_end(panier* p){
-    item_panier* ip = p->first;
-    while(ip->suivant!=NULL){
-        ip = ip->suivant;
-    }
-    free(ip->suivant);
-    ip->suivant = NULL;    
-}
-
-void pop(panier* p, int rem){   //prend en argument un panier et l'id a supprimer
-    item_panier* ip = p->first;
-    while(ip->suivant!=NULL && ip->suivant->idProd != rem){
-        ip = ip->suivant;
-    }
-    item_panier* ip1 = ip->suivant;
-    ip->suivant = ip->suivant->suivant;
-    free(ip1);
+    double prix = tab[identifiant].prix_unit * ip->quantite;
+    return prix;
 }
 
 panier* panier_init(){
@@ -92,34 +69,62 @@ void panier_add(panier* p){
     item_panier* ip = malloc(sizeof(item_panier));
     scanf("%i",&ip->idProd);
     scanf("%lf",&ip->quantite);
-    ip->suivant = p->first;
-    p->first = ip;
-    enleve_stock(ip);
-    free(ip);
+    int identifiant=0;
+    int n = taille("stock");
+    produit* tab = malloc(n*sizeof(produit));
+    charge(tab,n,"stock");
+    while(ip->idProd!=tab[identifiant].id){
+        identifiant++;
+    }
+    printf("%i\n",identifiant);
+    printf("%f\n",tab[identifiant].prix_unit);
+    if(tab[identifiant].prix_unit >= ip->quantite){
+        ip->suivant = p->first;
+        p->first = ip;
+        enleve_stock(ip);
+        free(ip);
+        printf("Vous avez acheter %.2f de %s\n",tab[identifiant].prix_unit*(double)ip->quantite,tab[identifiant].nom);
+    }
+    else{
+        printf("Il n'y a pas assez dans le stock\n");
+    }
+    
 }
 
 void panier_remove(panier* p){
-    //assert(p->first!=NULL);
+    assert(p->first!=NULL);
     int rem;
     int quant;
     scanf("%i",&rem);
     scanf("%i",&quant);
-    int loc = loc_prod(p, rem);
-    printf("%i\n",loc);
-    if(loc==1){
-        pop_front(p);
+    item_panier* ip = p->first;
+    while(ip->suivant!=NULL && ip->suivant->idProd!=rem){
+        ip = ip->suivant;
     }
-    else if(loc==0){
-        pop_end(p);
+    if(quant <= ip->suivant->quantite){
+            if(rem==1){
+        p->first = p->first->suivant;
+        free(ip);
+    }
+    else if(ip->suivant==NULL){
+        free(ip->suivant);
+        ip = NULL;
     }
     else{
-        pop(p,rem);
+        item_panier* ip1 = ip->suivant;
+        ip->suivant = ip->suivant->suivant;
+        free(ip1);
     }
-    item_panier* ip = malloc(sizeof(item_panier));
-    ip->idProd = rem;
-    ip->quantite = quant;
-    remet_stock(ip);
-    free(ip);
+    item_panier* ip1 = malloc(sizeof(item_panier));
+    ip1->idProd = rem;
+    ip1->quantite = quant;
+    remet_stock(ip1);
+    free(ip1);
+    }
+    else{
+        printf("Vous remettez plus d'article que vous en avez pris\n");
+    }
+
 }
 
 int main(){

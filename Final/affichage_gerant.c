@@ -15,6 +15,8 @@ void affichage_gerant(){
         printf("                    2 - Ajouter des produits dans le stock\n");
         printf("                    3 - Enlever des produits dans le stock\n");
         printf("                    4 - Quitter le mode gérant\n");
+        printf("\n");
+        printf("\n");
         scanf("%i",&choix);
         if(choix==1){
             int n = taille("stock");
