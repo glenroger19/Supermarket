@@ -23,6 +23,29 @@ int ordrealpha(const char* s1,const char* s2){
     return 0;
 }
 
+
+void tri(produit* tab, int n){
+    for(int i=0; i<n-1; i++){
+        for(int j=i+1; j<n; j++){
+            if(tab[i].id>tab[j].id){
+                int a = tab[i].id;
+                char b[64];
+                strcpy(b, tab[i].nom);
+                double c = tab[i].prix_unit;
+                int d = tab[i].stocks;
+                tab[i].id = tab[j].id;
+                strcpy(tab[j].nom,tab[i].nom);
+                tab[i].prix_unit = tab[j].prix_unit;
+                tab[i].stocks = tab[j].stocks;
+                tab[j].id = a;
+                strcpy(tab[j].nom,b);
+                tab[j].prix_unit = c;
+                tab[j].stocks = d;
+            }
+        }
+    }
+}
+
 int taille(char* nomfichier){
     FILE* fich = fopen(nomfichier,"rb");
     fseek(fich,0,SEEK_END);
