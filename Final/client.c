@@ -147,6 +147,6 @@ void panier_remove(panier* p){
 int main(){
     panier* p = panier_init();
     panier_add(p);
-    //panier_add(p);
+    panier_add(p);
     panier_remove(p);
 }
