@@ -108,7 +108,6 @@ int identifiant_p(int id, panier* p){
         ip = ip->suivant;
         identifiant++;
     }
-    free(ip);
     return identifiant;
 }
 
@@ -148,6 +147,6 @@ void panier_remove(panier* p){
 int main(){
     panier* p = panier_init();
     panier_add(p);
-    panier_add(p);
+    //panier_add(p);
     panier_remove(p);
 }
