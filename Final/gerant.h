@@ -10,8 +10,6 @@ typedef struct{
 
 int ordrealpha(const char* s1,const char* s2);
 
-void tri(produit* tab, int n);
-
 int taille(char* nomfichier);
 
 void sauvegarde_add(produit* tab, int n, char* nomfichier);

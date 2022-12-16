@@ -23,29 +23,6 @@ int ordrealpha(const char* s1,const char* s2){
     return 0;
 }
 
-
-void tri(produit* tab, int n){
-    for(int i=0; i<n-1; i++){
-        for(int j=i+1; j<n; j++){
-            if(tab[i].id>tab[j].id){
-                int a = tab[i].id;
-                char b[64];
-                strcpy(b, tab[i].nom);
-                double c = tab[i].prix_unit;
-                int d = tab[i].stocks;
-                tab[i].id = tab[j].id;
-                strcpy(tab[j].nom,tab[i].nom);
-                tab[i].prix_unit = tab[j].prix_unit;
-                tab[i].stocks = tab[j].stocks;
-                tab[j].id = a;
-                strcpy(tab[j].nom,b);
-                tab[j].prix_unit = c;
-                tab[j].stocks = d;
-            }
-        }
-    }
-}
-
 int taille(char* nomfichier){
     FILE* fich = fopen(nomfichier,"rb");
     fseek(fich,0,SEEK_END);
@@ -80,8 +57,6 @@ void print_tab(produit* tab,int n){
 }
 
 void add(produit* new){
-    printf("Quel est l'id du produit à ajouter ?\n");
-    scanf("%i",&new->id);
     printf("Quel est le produit à ajouter ?\n");
     scanf("%s",new->nom);
     printf("Quel est le prix du produit ?\n");
@@ -98,7 +73,6 @@ void enleve(produit* new, produit* new_copy, int n){
     while(new[indice].id != sup && indice<n){
         indice++;
     }
-    printf("%i\n",indice);
     for(int i=0;i<n-1;i++){
         if(i<indice){
             new_copy[i].id = new[i].id;

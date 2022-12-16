@@ -26,16 +26,12 @@ void affichage_gerant(){
             free(tab);
         }
         if(choix==2){
+            int n = taille("stock");
             produit* tab = malloc(sizeof(produit));
+            tab->id = n+1;
             add(tab);
             sauvegarde_add(tab,1,"stock");
             free(tab);
-            int n = taille("stock");
-            produit* tab1 = malloc(n*sizeof(produit));
-            charge(tab1,n,"stock");
-            tri(tab1,n);
-            sauvegarde(tab1,n,"stock");
-            free(tab1);
         }
         if(choix==3){
             int n = taille("stock");
