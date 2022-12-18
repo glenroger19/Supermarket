@@ -1,5 +1,5 @@
-#ifndef STRUCT1
-#define STRUCT1
+#ifndef STRUCT
+#define STRUCT
 
 typedef struct tm date;
 
@@ -18,6 +18,7 @@ typedef struct{
 }panier;
 
 #endif
+
 void entete_client(char* page);
 
 void bas_client();

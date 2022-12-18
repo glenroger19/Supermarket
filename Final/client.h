@@ -1,40 +1,24 @@
-#ifndef STRUCT1
-#define STRUCT1
-
-typedef struct tm date;
-
-typedef struct item_panier{
-    int idProd;
-    double quantite;
-    struct item_panier* suivant;
-}item_panier;
+#ifndef STRUCT2
+#define STRUCT2
 
 typedef struct{
-    item_panier* first;
-    date* date_ticket;
-    double total;
-    int ticketid;
-    int clientid;
-}panier;
+    char nom[64];
+    char prenom[64];
+    int id_client;
+}client;
 
-void enleve_stock(int id, double quantite);
+void delay(int i);
 
-void remet_stock(int id, double quantite);
+int taille_c(char* nomfichier);
 
-double prix(item_panier* ip);
+void charge_c(client* tab,int n, char* nomfichier);
 
-panier* panier_init();
+void sauvegarde_c(client* tab, int n, char* nomfichier);
 
-void panier_add(panier* p);
+int identifiant_c();
 
-int identifiant_p(int id, panier* p);
+void print_c(client* tab,int n);
 
-void pop_front(panier* p);
-
-void pop(panier* p, int id_rem);
-
-void panier_remove(panier* p);
-
-void affiche_panier(panier* p);
+int affichage_id(client* c);
 
 #endif

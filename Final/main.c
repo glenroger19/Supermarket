@@ -1,11 +1,16 @@
 #include<stdio.h>
+#include<time.h>
 #include<stdlib.h>
 #include"gerant.h"
-#include"client.h"
+#include"caissier.h"
 #include"affichage_gerant.h"
 #include"affichage_client.h"
+#include"client.h"
 
 int main(){
+    srand(time(NULL));
+    int taille = taille_c("base_client");
+    client* c = malloc((taille+1)*sizeof(client));
     printf("\e[1;1H\e[2J");
     printf("=========================================================================================================================================================\n");
     printf("                                                                        BIENVENUE \n");
@@ -27,7 +32,8 @@ int main(){
     }
     while(choix!='Q'){
         if(choix=='C'){
-            affichage_client();
+            int identifiant = affichage_id(c);
+            affichage_client(identifiant);
         }
         if(choix=='G'){
             affichage_gerant();

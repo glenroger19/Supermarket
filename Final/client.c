@@ -1,191 +1,140 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
 #include<time.h>
 #include<string.h>
-#include<stdlib.h>
-#include<assert.h>
 #include"gerant.h"
 
-typedef struct tm date;
-
-typedef struct item_panier{
-    int idProd;
-    double quantite;
-    struct item_panier* suivant;
-}item_panier;
-
 typedef struct{
-    item_panier* first;
-    date* date_ticket;
-    double total;
-    int ticketid;
-    int clientid;
-}panier;
+    char nom[64];
+    char prenom[64];
+    int id_client;
+}client;
 
-void enleve_stock(int id, double quantite){
-    int identifiant=0;
-    int n = taille("stock");
-    produit* tab = malloc(n*sizeof(produit));
-    charge(tab,n,"stock");
-    while(id!=tab[identifiant].id){
-        identifiant++;
-    }
-    tab[identifiant].stocks=tab[identifiant].stocks - quantite;
-    sauvegarde(tab,n,"stock");
-    free(tab);
+void delay(int i){ //code pris sur internet
+    clock_t start,end;
+    start=clock();
+    while(((end=clock())-start)<=i*CLOCKS_PER_SEC);
 }
 
-void remet_stock(int id, double quantite){
-    int identifiant=0;
-    int n = taille("stock");
-    produit* tab = malloc(n*sizeof(produit));
-    charge(tab,n,"stock");
-    while(id!=tab[identifiant].id){
-        identifiant++;
-    }
-    tab[identifiant].stocks=tab[identifiant].stocks + quantite;
-    sauvegarde(tab,n,"stock");
-    free(tab);
+int taille_c(char* nomfichier){
+    FILE* fich = fopen(nomfichier,"a+");
+    fseek(fich,0,SEEK_END);
+    int file_size = ftell(fich);
+    int n = file_size/sizeof(client);
+    return n;
 }
 
-double prix(item_panier* ip){
-    int identifiant=0;
-    int n = taille("stock");
-    produit* tab = malloc(n*sizeof(produit));
-    charge(tab,n,"stock");
-    while(ip->idProd!=tab[identifiant].id){
-        identifiant++;
-    }
-    double prix = tab[identifiant].prix_unit * ip->quantite;
-    return prix;
+void charge_c(client* tab,int n, char* nomfichier){
+    FILE* fich = fopen(nomfichier,"rb");
+    fread(tab,sizeof(client),n,fich);
+    fclose(fich);
 }
 
-panier* panier_init(){
-    panier* p = (panier*)malloc(sizeof(panier));
-    p->first = NULL;
-    return p;
+void sauvegarde_c(client* tab, int n, char* nomfichier){
+    FILE* f = fopen(nomfichier,"ab");
+    fwrite(tab,sizeof(client),n,f);
+    fclose(f);
 }
 
-void panier_add(panier* p){
-    item_panier* ip = malloc(sizeof(item_panier));
-    int n = taille("stock");
-    produit* tab = malloc(n*sizeof(produit));
-    charge(tab,n,"stock");
-    int id;
-    double quantite;
-    printf("Quel est l'identifiant du produit ?\n");
-    printf("\n");
-    scanf("%i",&id);
-    printf("\n");
-    printf("Quel est la quantité désirée ?\n");
-    printf("\n");
-    scanf("%lf",&quantite);
-    printf("\n");
-    int identifiant = 0;
-    while(id!=tab[identifiant].id){
-        identifiant++;
-    }
-    assert(quantite <= tab[identifiant].stocks);
-    ip->idProd = id;
-    ip->quantite = quantite;
-    ip->suivant = NULL;
-    if(p->first == NULL){
-        p->first = ip;
-    }
-    else{
-        item_panier* ip1 = p->first;
-        while(ip1->suivant != NULL){
-            ip1 = ip1->suivant;
+int identifiant_c(){
+    FILE* fich = fopen("base_client","a+");
+    int taille = taille_c("base_client");
+    client* c = malloc((taille+1)*sizeof(client));
+    charge_c(c,taille+1,"base_client");
+    int id = 1+(rand()/(double)RAND_MAX)*(9999);
+    int n = 0;
+    while(n<taille+1){
+        if(id==c->id_client){
+            identifiant_c();
         }
-        ip1->suivant = ip;
+        n++;
     }
-    if(tab[identifiant].stocks >= quantite){
-        enleve_stock(id, quantite);
-        double prix = tab[identifiant].prix_unit * quantite;
-        p->total += prix;
-        printf("Vous avez acheter %.2f euros de %s\n",prix,tab[identifiant].nom);
-    }
-    else{
-        printf("Il n'y a pas assez dans le stock\n");
+    return id;
+}
+
+void print_c(client* tab,int n){
+    for(int i=0; i<n; i++){
+        printf("                %i                       %s                           %s\n",tab[i].id_client,tab[i].nom,tab[i].prenom);
     }
 }
 
-int identifiant_p(int id, panier* p){
-    item_panier* ip = p->first;
-    int identifiant=0;
-    while(ip != NULL && id != ip->idProd){
-        ip = ip->suivant;
-        identifiant++;
+int affichage_id(client* c){
+    int identifiant;
+    int taille = taille_c("base_client");
+    charge_c(c,taille+1,"base_client");
+    char rep;
+    int count=0;
+    printf("\e[1;1H\e[2J");
+    printf("=========================================================================================================================================================\n");
+    printf("                                                                     CLIENT\n");
+    printf("=========================================================================================================================================================\n");
+    printf("\n");
+    printf("Avez-vous un identifiant ? (O)ui ou (N)on\n");
+    printf("\n");
+    scanf(" %c",&rep);
+    majuscule(&rep);
+    printf("\n");
+    int quitter = 0;
+    while(quitter!=1){
+        if(rep=='O'){
+            int id;
+            printf("\n");
+            printf("Entrer votre identifiant : ");
+            scanf("%i",&id);
+            printf("\n");
+            for(int i=0; i<taille+1; i++){
+                if(c[i].id_client == id){
+                    printf("Bienvenue %s\n",c[i].nom);
+                    identifiant = id;
+                    quitter = 1;
+                    delay(5);
+                }
+            }
+            if(quitter != 1){
+                printf("Votre identtifiant n'existe pas\n");
+                printf("\n");
+                if(count<3){
+                    printf("Réessayer s'il vous plait\n");
+                    rep = 'O';
+                    count++;
+                }
+                else{
+                    rep = 'N';
+                    quitter = 1;
+                }
+            }
+        }
+        else{
+            char rep1;
+            printf("Voulez-vous créer un compte ? (O)ui ou (N)on\n");
+            printf("\n");
+            scanf(" %s",&rep1);
+            printf("\n");
+            majuscule(&rep1);
+            if(rep1 == 'O'){
+                char nom[64];
+                char prenom[64];
+                printf("Entrer votre nom : ");
+                scanf("%s",nom);
+                strcpy(c->nom,nom);
+                printf("\n");
+                printf("Entrer votre prénom : ");
+                scanf("%s",prenom);
+                strcpy(c->nom,prenom);
+                printf("\n");
+                identifiant = identifiant_c();
+                printf("Voici votre identifiant : %i, merci de le mémoriser \n",identifiant);
+                c->id_client = identifiant;
+                sauvegarde_c(c,1,"base_client");
+                quitter = 1;
+                delay(10);
+            }
+            else{
+                identifiant = 0;
+                quitter = 1;
+            }
+        }
     }
     return identifiant;
-}
-
-void pop_front(panier* p){
-    item_panier* ip = p->first;
-    p->first = ip->suivant;
-    free(ip);
-}
-
-void pop(panier* p, int id_rem){
-    item_panier* ip = p->first;
-    while(ip->suivant!=NULL && ip->suivant->idProd!=id_rem){
-        ip = ip->suivant;
-    }
-    item_panier* ip1 = ip->suivant;
-    ip->suivant = ip1->suivant;
-    free(ip1);
-}
-
-void panier_remove(panier* p){
-    assert(p->first!=NULL);
-    int id_rem;
-    int quant;
-    printf("Quel est l'identifiant du produit à supprimer ?\n");
-    printf("\n");
-    scanf("%i",&id_rem);
-    printf("\n");
-    char res;
-    printf("Voulez-vous enlever tous les produits ? (O)ui ou (N)on ?\n");
-    printf("\n");
-    scanf(" %c",&res);
-    printf("\n");
-    majuscule(&res);
-    if(res=='O'){
-        int identifiant = identifiant_p(id_rem,p);
-        if(identifiant == 0){
-        pop_front(p);
-        }
-        else{
-        pop(p,id_rem);
-        }
-        remet_stock(id_rem,quant);
-    }
-    else{
-        item_panier* ip = p->first;
-        while(ip != NULL && id_rem != ip->idProd){
-            ip = ip->suivant;
-        }
-        printf("Quel est la quantité à supprimer ?\n");
-        printf("\n");
-        scanf("%i",&quant);
-        printf("\n");
-        if(quant<ip->quantite){
-            ip->quantite = ip->quantite - quant;
-        }
-        else{
-            printf("Impossible, vous rendez plus de produit qu'il y en a.\n");
-            printf("\n");
-        }
-    }
-}
-
-void affiche_panier(panier* p){
-    int n = taille("stock");
-    produit* tab = malloc(n*sizeof(produit));
-    charge(tab,n,"stock");
-    item_panier* ip;
-    for(ip=p->first ; ip!=NULL ; ip=ip->suivant){
-        int identifiant = identifiant_p(ip->idProd,p);
-        printf("  %.2f                                                              %s                                         %.2f\n",ip->quantite,tab[identifiant].nom,tab[identifiant].prix_unit);
-    }
-    printf("\n");
 }
