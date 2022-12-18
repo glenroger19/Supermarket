@@ -2,10 +2,10 @@
 #include<stdlib.h>
 #include"gerant.h"
 
-void affichage_gerant(){
+void entete_gerant(char* page){
     printf("\e[1;1H\e[2J");
     printf("=========================================================================================================================================================\n");
-    printf("                                                                        MODE GERANT \n");
+    printf("                                                                        %s\n",page);
     printf("=========================================================================================================================================================\n");
     printf("\n");
     printf("\n");
@@ -14,51 +14,32 @@ void affichage_gerant(){
     printf("                    3 - Enlever des produits dans le stock\n");
     printf("                    4 - Quitter le mode gérant\n");
     printf("\n");
-    printf("\n");
+}
+
+void bas_gerant(){
     printf("Veuillez choisir ce que vous allez faire :\n");
     printf("\n");
-    printf("\n");
+}
+
+void affichage_gerant(){
+    entete_gerant("GERANT");
+    bas_gerant();
     int choix = 0;
     scanf("%i",&choix);
     while(choix!=4){
         if(choix==1){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                        MODE GERANT \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Regarder la liste des produits en stock\n");
-            printf("                    2 - Ajouter des produits dans le stock\n");
-            printf("                    3 - Enlever des produits dans le stock\n");
-            printf("                    4 - Quitter le mode gérant\n");
-            printf("\n");
-            printf("\n");
+            entete_gerant("LISTE DES PRODUITS");
             int n = taille("stock");
             produit* tab = malloc(n*sizeof(produit));
             charge(tab,n,"stock");
             print_tab(tab,n);
             free(tab);
             printf("\n");
-            printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
-            printf("\n");
-            printf("\n");
+            bas_gerant();
             scanf("%i",&choix);
         }
         if(choix==2){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                        MODE GERANT \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Regarder la liste des produits en stock\n");
-            printf("                    2 - Ajouter des produits dans le stock\n");
-            printf("                    3 - Enlever des produits dans le stock\n");
-            printf("                    4 - Quitter le mode gérant\n");
-            printf("\n");
-            printf("\n");
+            entete_gerant("AJOUTER DES PRODUITS");
             int n = taille("stock");
             produit* tab = malloc(sizeof(produit));
             int rep = add(tab);
@@ -68,25 +49,11 @@ void affichage_gerant(){
                 free(tab);
             }
             printf("\n");
-            printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
-            printf("\n");
-            printf("\n");
+            bas_gerant();
             scanf("%i",&choix);
         }
         if(choix==3){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                        MODE GERANT \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Regarder la liste des produits en stock\n");
-            printf("                    2 - Ajouter des produits dans le stock\n");
-            printf("                    3 - Enlever des produits dans le stock\n");
-            printf("                    4 - Quitter le mode gérant\n");
-            printf("\n");
-            printf("\n");
+            entete_gerant("ENLEVER DES PRODUITS");
             int n = taille("stock");
             produit* tab = malloc(n*sizeof(produit));
             charge(tab,n,"stock");
@@ -94,10 +61,7 @@ void affichage_gerant(){
             enleve(tab,new_tab,n);
             sauvegarde(new_tab,n-1,"stock");
             printf("\n");
-            printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
-            printf("\n");
-            printf("\n");
+            bas_gerant();
             scanf("%i",&choix);
         }
     }

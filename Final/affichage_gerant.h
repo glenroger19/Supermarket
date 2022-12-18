@@ -9,5 +9,8 @@ typedef struct{
 }produit;
 
 #endif
+void entete_gerant(char* page);
+
+void bas_gerant();
 
 void affichage_gerant();

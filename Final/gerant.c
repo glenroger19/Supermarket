@@ -67,7 +67,8 @@ void print_tab(produit* tab,int n){
 int add(produit* new){
     char nom[64];
     printf("Quel est le produit à ajouter ?\n");
-    scanf("%s",nom);
+    printf("\n");
+    scanf(" %s",nom);
     int n = taille("stock");
     produit* tab = malloc(n*sizeof(produit));
     charge(tab,n,"stock");
@@ -78,18 +79,22 @@ int add(produit* new){
     if(i<n){
         char rep;
         printf("Voulez-vous changer le prix du produit ? (O)ui ou (N)on\n");
+        printf("\n");
         scanf(" %c",&rep);
         majuscule(&rep);
         if(rep == 'O'){
             printf("Quel est le nouveau prix du produit ?\n");
+            printf("\n");
             scanf("%lf",&tab[i].prix_unit);
         }
         char rep1;
         printf("Voulez-vous changer la quantité disponible ? (O)ui ou (N)on\n");
+        printf("\n");
         scanf(" %c",&rep1);
         majuscule(&rep1);
         if(rep1 == 'O'){
             printf("Quel est le nouveau stock ?\n");
+            printf("\n");
             scanf("%i",&tab[i].stocks);
         }
         sauvegarde(tab,n,"stock");
@@ -98,8 +103,10 @@ int add(produit* new){
     else{
         strcpy(new->nom,nom);
         printf("Quel est le prix du produit ?\n");
+        printf("\n");
         scanf("%lf",&new->prix_unit);
         printf("Quel est la quantité en stock du produit ?\n");
+        printf("\n");
         scanf("%i",&new->stocks);
         return 1;
     }
@@ -108,6 +115,7 @@ int add(produit* new){
 void enleve(produit* new, produit* new_copy, int n){
     int sup;
     printf("Quel est l'id du produit voulez-vous enlever ?\n");
+    printf("\n");
     scanf("%i",&sup);
     int indice=0;
     while(new[indice].id != sup && indice<n){

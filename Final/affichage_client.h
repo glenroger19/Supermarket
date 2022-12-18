@@ -18,6 +18,11 @@ typedef struct{
 }panier;
 
 #endif
+void entete_client(char* page);
+
+void bas_client();
+
+int taille1(char* nomfichier);
 
 void receipt(panier* p);
 

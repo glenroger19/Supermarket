@@ -73,9 +73,13 @@ void panier_add(panier* p){
     int id;
     double quantite;
     printf("Quel est l'identifiant du produit ?\n");
+    printf("\n");
     scanf("%i",&id);
+    printf("\n");
     printf("Quel est la quantité désirée ?\n");
+    printf("\n");
     scanf("%lf",&quantite);
+    printf("\n");
     int identifiant = 0;
     while(id!=tab[identifiant].id){
         identifiant++;
@@ -136,13 +140,13 @@ void panier_remove(panier* p){
     int id_rem;
     int quant;
     printf("Quel est l'identifiant du produit à supprimer ?\n");
-    scanf("%i",&id_rem);
     printf("\n");
+    scanf("%i",&id_rem);
     printf("\n");
     char res;
     printf("Voulez-vous enlever tous les produits ? (O)ui ou (N)on ?\n");
-    scanf(" %c",&res);
     printf("\n");
+    scanf(" %c",&res);
     printf("\n");
     majuscule(&res);
     if(res=='O'){
@@ -160,18 +164,15 @@ void panier_remove(panier* p){
         while(ip != NULL && id_rem != ip->idProd){
             ip = ip->suivant;
         }
-        printf("\n");
-        printf("\n");
         printf("Quel est la quantité à supprimer ?\n");
-        scanf("%i",&quant);
         printf("\n");
+        scanf("%i",&quant);
         printf("\n");
         if(quant<ip->quantite){
             ip->quantite = ip->quantite - quant;
         }
         else{
-            printf("Imoossible, vous rendez plus de produit qu'il y en a.\n");
-            printf("\n");
+            printf("Impossible, vous rendez plus de produit qu'il y en a.\n");
             printf("\n");
         }
     }

@@ -4,30 +4,10 @@
 #include"gerant.h"
 #include"client.h"
 
-void receipt(panier* p){
-    time_t timestamp = time(NULL);
-    struct tm * now = localtime(&timestamp);
-    printf("=========================================================================================================================================================\n");
-    printf("                                                                        RECU \n");
-    printf("=========================================================================================================================================================\n");
-    printf("\n");
-    printf("\n");
-    printf("    Date : %4d-%02d-%02d\n",now->tm_year+1900, now->tm_mon+1, now->tm_mday);
-    printf("    Heure : %02d:%02d:%02d\n",now->tm_hour, now->tm_min, now->tm_sec);
-    printf("\n");
-    printf("\n");
-    printf("Quantité                                                            Désignation                                   Prix Unitaire en euros\n");
-    printf("\n");
-    affiche_panier(p);
-    printf("                                                                                                                  Total HT : %.2lf euros\n",p->total*(1-(20/(double)100)));
-    printf("                                                                                                                  Total TTC : %.2lf euros\n",p->total);
-}
-
-void affichage_client(){
-    panier* p = panier_init();
+void entete_client(char* page){
     printf("\e[1;1H\e[2J");
     printf("=========================================================================================================================================================\n");
-    printf("                                                                     MODE CAISSIER \n");
+    printf("                                                                     %s\n",page);
     printf("=========================================================================================================================================================\n");
     printf("\n");
     printf("\n");
@@ -37,114 +17,87 @@ void affichage_client(){
     printf("                    4 - Montrer et payer ma reçu\n");
     printf("                    5 - Quitter le mode caissier\n");
     printf("\n");
-    printf("\n");
+}
+
+void bas_client(){
     printf("Veuillez choisir ce que vous allez faire :\n");
     printf("\n");
+}
+
+int taille1(char* nomfichier){
+    FILE* fich = fopen(nomfichier,"rb");
+    fseek(fich,0,SEEK_END);
+    int file_size = ftell(fich);
+    int n = file_size/sizeof(panier);
+    return n;
+}
+
+void receipt(panier* p){
+    time_t timestamp = time(NULL);
+    date* date = localtime(&timestamp);
+    FILE* compta = fopen("compta.csv","a+");
+    int n = taille1("compta.csv");
+    p->ticketid = n+1;
+    p->date_ticket = date;
+    printf("    Date : %4d-%02d-%02d\n",p->date_ticket->tm_year+1900, p->date_ticket->tm_mon+1, p->date_ticket->tm_mday);
+    printf("    TicketID : %i\n",p->ticketid);
     printf("\n");
+    printf("\n");
+    printf("Quantité                                                            Désignation                                   Prix Unitaire en euros\n");
+    printf("\n");
+    affiche_panier(p);
+    printf("                                                                                                                  Total HT : %.2lf euros\n",p->total*(1-(20/(double)100)));
+    printf("                                                                                                                  Total TTC : %.2lf euros\n",p->total);
+    fprintf(compta,"%4d-%02d-%02d;%i;%i;%.2lf\n",date->tm_year+1900, date->tm_mon+1, date->tm_mday,p->ticketid,0,p->total);
+    fclose(compta);
+}
+
+void affichage_client(){
+    panier* p = panier_init();
+    entete_client("MODE CAISSIER");
+    bas_client();
     int choix;
     scanf("%i",&choix);
     while(choix!=5){
         if(choix==1){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                     MODE CAISSIER \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Ajouter un produit dans le panier\n");
-            printf("                    2 - Enlever un produit dans le panier\n");
-            printf("                    3 - Afficher mon panier\n");
-            printf("                    4 - Montrer et payer ma reçu\n");
-            printf("                    5 - Quitter le mode caissier\n");
-            printf("\n");
-            printf("\n");
+            entete_client("AJOUTER AU PANIER");
             int n = taille("stock");
             produit* tab = malloc(n*sizeof(produit));
             charge(tab,n,"stock");
             print_tab(tab,n);
             free(tab);
-            printf("\n");
             printf("\n");
             panier_add(p);
             printf("\n");
-            printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
-            printf("\n");
-            printf("\n");
+            bas_client();
             scanf("%i",&choix);
         }
         if(choix==2){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                     MODE CAISSIER \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Ajouter un produit dans le panier\n");
-            printf("                    2 - Enlever un produit dans le panier\n");
-            printf("                    3 - Afficher mon panier\n");
-            printf("                    4 - Montrer et payer ma reçu\n");
-            printf("                    5 - Quitter le mode caissier\n");
-            printf("\n");
-            printf("\n");
-            panier_remove(p);
-            printf("\n");
-            printf("\n");
-            int n = taille("stock");
-            produit* tab = malloc(n*sizeof(produit));
-            charge(tab,n,"stock");
-            print_tab(tab,n);
-            free(tab);
-            printf("\n");
-            printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
-            printf("\n");
-            printf("\n");
-            scanf("%i",&choix);
-        }
-        if(choix==3){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                     MODE CAISSIER \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Ajouter un produit dans le panier\n");
-            printf("                    2 - Enlever un produit dans le panier\n");
-            printf("                    3 - Afficher mon panier\n");
-            printf("                    4 - Montrer et payer ma reçu\n");
-            printf("                    5 - Quitter le mode caissier\n");
-            printf("\n");
+            entete_client("ENLEVER PRODUIT");
             printf("\n");
             affiche_panier(p);
             printf("\n");
+            panier_remove(p);
             printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
+            entete_client("MODE CAISSIER");
+            bas_client();
+            scanf("%i",&choix);
+        }
+        if(choix==3){
+            entete_client("MON PANIER");
+            printf("Quantité                                                            Désignation                                   Prix Unitaire en euros\n");
+            affiche_panier(p);
             printf("\n");
-            printf("\n");
+            bas_client();
             scanf("%i",&choix);
         }
         if(choix==4){
-            printf("\e[1;1H\e[2J");
-            printf("=========================================================================================================================================================\n");
-            printf("                                                                     MODE CAISSIER \n");
-            printf("=========================================================================================================================================================\n");
-            printf("\n");
-            printf("\n");
-            printf("                    1 - Ajouter un produit dans le panier\n");
-            printf("                    2 - Enlever un produit dans le panier\n");
-            printf("                    3 - Afficher mon panier\n");
-            printf("                    4 - Montrer et payer ma reçu\n");
-            printf("                    5 - Quitter le mode caissier\n");
-            printf("\n");
-            printf("\n");
+            entete_client("RECU");
             receipt(p);
             printf("\n");
-            printf("\n");
-            printf("Veuillez choisir ce que vous allez faire :\n");
-            printf("\n");
-            printf("\n");
+            bas_client();
             scanf("%i",&choix);
+            choix = 5;
         }
     }
 }
