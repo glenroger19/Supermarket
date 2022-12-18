@@ -35,4 +35,6 @@ void pop(panier* p, int id_rem);
 
 void panier_remove(panier* p);
 
+void affiche_panier(panier* p);
+
 #endif

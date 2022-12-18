@@ -72,7 +72,9 @@ void panier_add(panier* p){
     charge(tab,n,"stock");
     int id;
     double quantite;
+    printf("Quel est l'identifiant du produit ?\n");
     scanf("%i",&id);
+    printf("Quel est la quantité désirée ?\n");
     scanf("%lf",&quantite);
     int identifiant = 0;
     while(id!=tab[identifiant].id){
@@ -95,6 +97,7 @@ void panier_add(panier* p){
     if(tab[identifiant].stocks >= quantite){
         enleve_stock(id, quantite);
         double prix = tab[identifiant].prix_unit * quantite;
+        p->total += prix;
         printf("Vous avez acheter %.2f euros de %s\n",prix,tab[identifiant].nom);
     }
     else{
@@ -132,32 +135,56 @@ void panier_remove(panier* p){
     assert(p->first!=NULL);
     int id_rem;
     int quant;
+    printf("Quel est l'identifiant du produit à supprimer ?\n");
     scanf("%i",&id_rem);
-    scanf("%i",&quant);
-    int identifiant = identifiant_p(id_rem,p);
-    printf("%i\n",identifiant);
-    if(identifiant == 0){
+    printf("\n");
+    printf("\n");
+    char res;
+    printf("Voulez-vous enlever tous les produits ? (O)ui ou (N)on ?\n");
+    scanf(" %c",&res);
+    printf("\n");
+    printf("\n");
+    majuscule(&res);
+    if(res=='O'){
+        int identifiant = identifiant_p(id_rem,p);
+        if(identifiant == 0){
         pop_front(p);
+        }
+        else{
+        pop(p,id_rem);
+        }
+        remet_stock(id_rem,quant);
     }
     else{
-        pop(p,id_rem);
+        item_panier* ip = p->first;
+        while(ip != NULL && id_rem != ip->idProd){
+            ip = ip->suivant;
+        }
+        printf("\n");
+        printf("\n");
+        printf("Quel est la quantité à supprimer ?\n");
+        scanf("%i",&quant);
+        printf("\n");
+        printf("\n");
+        if(quant<ip->quantite){
+            ip->quantite = ip->quantite - quant;
+        }
+        else{
+            printf("Imoossible, vous rendez plus de produit qu'il y en a.\n");
+            printf("\n");
+            printf("\n");
+        }
     }
-    remet_stock(id_rem,quant);
 }
 
 void affiche_panier(panier* p){
-    item_panier* ip;
     int n = taille("stock");
     produit* tab = malloc(n*sizeof(produit));
     charge(tab,n,"stock");
+    item_panier* ip;
     for(ip=p->first ; ip!=NULL ; ip=ip->suivant){
-        printf("%s %.2f",tab[ip->idProd].nom,ip->quantite);
+        int identifiant = identifiant_p(ip->idProd,p);
+        printf("  %.2f                                                              %s                                         %.2f\n",ip->quantite,tab[identifiant].nom,tab[identifiant].prix_unit);
     }
     printf("\n");
-}
-
-int main(){
-    panier* p = panier_init();
-    panier_add(p);
-    affiche_panier(p);
 }

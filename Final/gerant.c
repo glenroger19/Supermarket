@@ -10,6 +10,14 @@ typedef struct{
     int stocks;
 }produit;
 
+void majuscule(char* mot){
+    int i = 0;
+    for (i = 0; mot[i] != '\0'; i ++){
+        if (mot[i]  >= 'a' &&  mot[i] <= 'z')
+         mot[i] -=  'a' - 'A';
+    }
+}
+
 int ordrealpha(const char* s1,const char* s2){
     int n = strlen(s2);
     for(int i=0;i<n+1;i++){
@@ -56,13 +64,45 @@ void print_tab(produit* tab,int n){
     }
 }
 
-void add(produit* new){
+int add(produit* new){
+    char nom[64];
     printf("Quel est le produit à ajouter ?\n");
-    scanf("%s",new->nom);
-    printf("Quel est le prix du produit ?\n");
-    scanf("%lf",&new->prix_unit);
-    printf("Quel est la quantité en stock du produit ?\n");
-    scanf("%i",&new->stocks);
+    scanf("%s",nom);
+    int n = taille("stock");
+    produit* tab = malloc(n*sizeof(produit));
+    charge(tab,n,"stock");
+    int i = 0;
+    while(ordrealpha(tab[i].nom,nom)!=0 && i<n){
+        i++;
+    }
+    if(i<n){
+        char rep;
+        printf("Voulez-vous changer le prix du produit ? (O)ui ou (N)on\n");
+        scanf(" %c",&rep);
+        majuscule(&rep);
+        if(rep == 'O'){
+            printf("Quel est le nouveau prix du produit ?\n");
+            scanf("%lf",&tab[i].prix_unit);
+        }
+        char rep1;
+        printf("Voulez-vous changer la quantité disponible ? (O)ui ou (N)on\n");
+        scanf(" %c",&rep1);
+        majuscule(&rep1);
+        if(rep1 == 'O'){
+            printf("Quel est le nouveau stock ?\n");
+            scanf("%i",&tab[i].stocks);
+        }
+        sauvegarde(tab,n,"stock");
+        return 0;
+    }
+    else{
+        strcpy(new->nom,nom);
+        printf("Quel est le prix du produit ?\n");
+        scanf("%lf",&new->prix_unit);
+        printf("Quel est la quantité en stock du produit ?\n");
+        scanf("%i",&new->stocks);
+        return 1;
+    }
 }
 
 void enleve(produit* new, produit* new_copy, int n){

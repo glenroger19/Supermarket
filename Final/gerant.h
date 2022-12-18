@@ -8,6 +8,8 @@ typedef struct{
     int stocks;
 }produit;
 
+void majuscule(char* mot);
+
 int ordrealpha(const char* s1,const char* s2);
 
 int taille(char* nomfichier);
@@ -20,7 +22,7 @@ void charge(produit* tab,int n, char* nomfichier);
 
 void print_tab(produit* tab,int n);
 
-void add(produit* new);
+int add(produit* new);
 
 void enleve(produit* new, produit* new_copy, int n);
 
