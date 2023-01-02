@@ -14,7 +14,8 @@ void entete_gerant(char* page){
     printf("                    2 - Ajouter des produits dans le stock\n");
     printf("                    3 - Enlever des produits dans le stock\n");
     printf("                    4 - Afficher la comptabilité\n");
-    printf("                    5 - Quitter le mode gérant\n");
+    printf("                    5 - Ajouter un compte d'accès au mode gérant\n");
+    printf("                    6 - Quitter le mode gérant\n");
     printf("\n");
 }
 
@@ -38,7 +39,7 @@ void affichage_gerant(){
     bas_gerant();
     int choix = 0;
     scanf("%i",&choix);
-    while(choix!=5){
+    while(choix!=6){
         if(choix==1){
             entete_gerant("LISTE DES PRODUITS");
             int n = taille("stock");
@@ -81,7 +82,7 @@ void affichage_gerant(){
             FILE* fich = fopen("compta.csv","r");
             char c;
             while((c = fgetc(fich))!=EOF){
-                if(c==','){
+                if(c==';' || c==','){
                     printf("\t\t\t\t");
                 }
                 else{
@@ -94,7 +95,7 @@ void affichage_gerant(){
             scanf("%i",&choix);
         }
         if(choix==5){
-            entete_gerant("COMPTABILITE");
+            entete_gerant("AJOUT ACCES");
             compte* com = malloc(sizeof(compte));
             char login[64];
             char mdp[64];

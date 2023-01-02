@@ -36,7 +36,7 @@ int taille1(char* nomfichier){
 void receipt(panier* p){
     time_t timestamp = time(NULL);
     date* date = localtime(&timestamp);
-    client* tab = malloc(taille_c("base_client")*sizeof(client));
+    client* tab = malloc((taille_c("base_client")+1)*sizeof(client));
     charge_c(tab,taille_c("base_client")+1,"base_client");
     FILE* compta = fopen("compta.csv","a+");
     int n = taille1("compta.csv");
@@ -55,13 +55,14 @@ void receipt(panier* p){
     if(p->clientid!=0){
         for(int i=0; i<taille_c("base_client")+1; i++){
             if(tab[i].id_client == p->clientid){
+                printf("%i",tab[i].id_client);
                 printf("                                                                Votre ancienne cagnotte est de : %.2lf euros\n",tab[i].cagnotte);
-                printf("%s\n",tab[i].nom);
+                tab[i].cagnotte = tab[i].cagnotte + p->total*0.005; 
                 printf("                                                                Votre nouvelle cagnotte est de : %.2lf euros\n",tab[i].cagnotte);
             }
         }
+        change_c(tab,taille_c("base_client")+1,"base_client");
     }
-    change_c(tab,taille_c("base_client")+1,"base_client");
     fprintf(compta,"%4d-%02d-%02d;%i;%i;%.2lf\n",date->tm_year+1900, date->tm_mon+1, date->tm_mday,p->ticketid,p->clientid,p->total);
     fclose(compta);
 }

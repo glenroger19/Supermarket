@@ -81,6 +81,7 @@ int add(produit* new){
         printf("Voulez-vous changer le prix du produit ? (O)ui ou (N)on\n");
         printf("\n");
         scanf(" %c",&rep);
+        printf("\n");
         majuscule(&rep);
         if(rep == 'O'){
             printf("Quel est le nouveau prix du produit ?\n");
@@ -91,11 +92,13 @@ int add(produit* new){
         printf("Voulez-vous changer la quantité disponible ? (O)ui ou (N)on\n");
         printf("\n");
         scanf(" %c",&rep1);
+        printf("\n");
         majuscule(&rep1);
         if(rep1 == 'O'){
             printf("Quel est le nouveau stock ?\n");
             printf("\n");
             scanf("%i",&tab[i].stocks);
+            printf("\n");
         }
         sauvegarde(tab,n,"stock");
         return 0;

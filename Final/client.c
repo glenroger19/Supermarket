@@ -87,15 +87,13 @@ int affichage_id(client* c){
     int quitter = 0;
     while(quitter!=1){
         if(rep=='O'){
-            int id;
             printf("\n");
             printf("Entrer votre identifiant : ");
-            scanf("%i",&id);
+            scanf("%i",&identifiant);
             printf("\n");
             for(int i=0; i<taille+1; i++){
-                if(c[i].id_client == id){
+                if(c[i].id_client == identifiant){
                     printf("Bienvenue %s\n",c[i].nom);
-                    identifiant = id;
                     quitter = 1;
                     delay(5);
                 }
@@ -114,7 +112,7 @@ int affichage_id(client* c){
                 }
             }
         }
-        else{
+        if(rep=='N'){
             char rep1;
             printf("Voulez-vous créer un compte ? (O)ui ou (N)on\n");
             printf("\n");
@@ -135,8 +133,8 @@ int affichage_id(client* c){
                 identifiant = identifiant_c();
                 printf("Voici votre identifiant : %i, merci de le mémoriser \n",identifiant);
                 c->id_client = identifiant;
-                sauvegarde_c(c,1,"base_client");
                 c->cagnotte = 0;
+                sauvegarde_c(c,1,"base_client");
                 quitter = 1;
                 delay(10);
             }
