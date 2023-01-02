@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include"gerant.h"
-#include"acces.h"
+#include"acces_gerant.h"
 
 void entete_gerant(char* page){
     printf("\e[1;1H\e[2J");
@@ -97,15 +97,13 @@ void affichage_gerant(){
         if(choix==5){
             entete_gerant("AJOUT ACCES");
             compte* com = malloc(sizeof(compte));
-            char login[64];
-            char mdp[64];
             printf("Entrer votre login : \n");
             printf("\n");
-            scanf("%s",login);
+            scanf("%s",com->login);
             printf("\n");
             printf("Entrer votre mot de passe : \n");
             printf("\n");
-            scanf("%s",mdp);
+            scanf("%s",com->mdp);
             sauvegarde_add_compte(com,1,"base_employe");
             printf("\n");
             bas_gerant();

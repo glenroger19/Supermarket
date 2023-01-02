@@ -55,7 +55,6 @@ void receipt(panier* p){
     if(p->clientid!=0){
         for(int i=0; i<taille_c("base_client")+1; i++){
             if(tab[i].id_client == p->clientid){
-                printf("%i",tab[i].id_client);
                 printf("                                                                Votre ancienne cagnotte est de : %.2lf euros\n",tab[i].cagnotte);
                 tab[i].cagnotte = tab[i].cagnotte + p->total*0.005; 
                 printf("                                                                Votre nouvelle cagnotte est de : %.2lf euros\n",tab[i].cagnotte);

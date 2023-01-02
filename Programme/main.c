@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<time.h>
 #include<stdlib.h>
+#include<string.h>
 #include"gerant.h"
 #include"caissier.h"
 #include"affichage_gerant.h"
@@ -20,8 +21,8 @@ int main(){
     printf("                    Choisir entre mode (C)aissier, mode (G)erant ou bien (Q)uitter\n");
     printf("\n");
     printf("\n");
-    char choix = 0;
-    scanf(" %c",&choix);
+    char choix;
+    scanf("%c",&choix);
     majuscule(&choix);
     while(choix!='C' && choix!='G' && choix!='Q'){
         printf("Mauvaise manipulation merci de ressaisir :\n");
@@ -47,7 +48,7 @@ int main(){
         printf("                    Choisir entre mode (C)aissier, mode (G)erant ou bien (Q)uitter\n");
         printf("\n");
         printf("\n");
-        scanf(" %c",&choix);
+        scanf("%c",&choix);
         majuscule(&choix);
     }
 }
