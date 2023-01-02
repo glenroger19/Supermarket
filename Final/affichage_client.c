@@ -3,6 +3,7 @@
 #include <time.h>
 #include"gerant.h"
 #include"caissier.h"
+#include"client.h"
 
 void entete_client(char* page){
     printf("\e[1;1H\e[2J");
@@ -35,6 +36,8 @@ int taille1(char* nomfichier){
 void receipt(panier* p){
     time_t timestamp = time(NULL);
     date* date = localtime(&timestamp);
+    client* tab = malloc(taille_c("base_client")*sizeof(client));
+    charge_c(tab,taille_c("base_client")+1,"base_client");
     FILE* compta = fopen("compta.csv","a+");
     int n = taille1("compta.csv");
     p->ticketid = n+1;
@@ -49,6 +52,16 @@ void receipt(panier* p){
     affiche_panier(p);
     printf("                                                                                                                  Total HT : %.2lf euros\n",p->total*(1-(20/(double)100)));
     printf("                                                                                                                  Total TTC : %.2lf euros\n",p->total);
+    if(p->clientid!=0){
+        for(int i=0; i<taille_c("base_client")+1; i++){
+            if(tab[i].id_client == p->clientid){
+                printf("                                                                Votre ancienne cagnotte est de : %.2lf euros\n",tab[i].cagnotte);
+                printf("%s\n",tab[i].nom);
+                printf("                                                                Votre nouvelle cagnotte est de : %.2lf euros\n",tab[i].cagnotte);
+            }
+        }
+    }
+    change_c(tab,taille_c("base_client")+1,"base_client");
     fprintf(compta,"%4d-%02d-%02d;%i;%i;%.2lf\n",date->tm_year+1900, date->tm_mon+1, date->tm_mday,p->ticketid,p->clientid,p->total);
     fclose(compta);
 }

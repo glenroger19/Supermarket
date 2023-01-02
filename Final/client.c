@@ -9,9 +9,10 @@ typedef struct{
     char nom[64];
     char prenom[64];
     int id_client;
+    double cagnotte;
 }client;
 
-void delay(int i){ //code pris sur internet
+void delay(int i){                                      //code pris sur internet
     clock_t start,end;
     start=clock();
     while(((end=clock())-start)<=i*CLOCKS_PER_SEC);
@@ -37,6 +38,12 @@ void sauvegarde_c(client* tab, int n, char* nomfichier){
     fclose(f);
 }
 
+void change_c(client* tab, int n, char* nomfichier){
+    FILE* f = fopen(nomfichier,"w");
+    fwrite(tab,sizeof(client),n,f);
+    fclose(f);
+}
+
 int identifiant_c(){
     FILE* fich = fopen("base_client","a+");
     int taille = taille_c("base_client");
@@ -51,6 +58,8 @@ int identifiant_c(){
         n++;
     }
     return id;
+    free(c);
+    fclose(fich);
 }
 
 void print_c(client* tab,int n){
@@ -121,12 +130,13 @@ int affichage_id(client* c){
                 printf("\n");
                 printf("Entrer votre prénom : ");
                 scanf("%s",prenom);
-                strcpy(c->nom,prenom);
+                strcpy(c->prenom,prenom);
                 printf("\n");
                 identifiant = identifiant_c();
                 printf("Voici votre identifiant : %i, merci de le mémoriser \n",identifiant);
                 c->id_client = identifiant;
                 sauvegarde_c(c,1,"base_client");
+                c->cagnotte = 0;
                 quitter = 1;
                 delay(10);
             }
